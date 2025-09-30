@@ -1,0 +1,26 @@
+services:
+  api:
+    image: local/backend
+    environment:
+      RESEND_API_KEY: re_1234
+      NOREPLY_EMAIL: no-reply@redirectr.xyz
+    # ports:
+    #   - 8080:8080
+    networks:
+      - app-network
+      - traefik-public
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.services.api.loadbalancer.server.port=8080
+        - traefik.http.routers.api.rule=Host(`api.roady.patos.dev`)
+        - traefik.http.routers.api.entrypoints=websecure
+        - traefik.http.routers.api.tls=true
+        - traefik.http.routers.api.tls.certresolver=leresolver
+
+networks:
+  app-network:
+    external: true
+  traefik-public:
+    driver: overlay
+    external: true
