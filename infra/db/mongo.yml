@@ -1,0 +1,30 @@
+services:
+  mongo:
+    image: mongo:latest
+    environment:
+      TZ: America/Sao_Paulo
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: quack
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - app-network
+    # deploy:
+    #   labels:
+    #     - traefik.enable=true
+    #     - traefik.http.services.registry.loadbalancer.server.port=5000
+    #     - traefik.http.routers.registry.rule=Host(`registry.${DOMAIN_NAME}`)
+    #     - traefik.http.routers.registry.entrypoints=websecure
+    #     - traefik.http.routers.registry.tls=true
+    #     - traefik.http.routers.registry.tls.certresolver=leresolver
+networks:
+  app-network:
+    external: true
+#   traefik-public:
+#     driver: overlay
+#     external: true
+
+volumes:
+  mongodb_data:

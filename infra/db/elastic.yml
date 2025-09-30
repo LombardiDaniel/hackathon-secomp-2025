@@ -1,0 +1,54 @@
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    # ports:
+    #   - 9200:9200
+    networks:
+      - app-network
+      - traefik-public
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.services.elastic.loadbalancer.server.port=9200
+        - traefik.http.routers.elastic.rule=Host(`elastic.roady.patos.dev`)
+        - traefik.http.routers.elastic.entrypoints=websecure
+        - traefik.http.routers.elastic.tls=true
+        - traefik.http.routers.elastic.tls.certresolver=leresolver
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.1
+    container_name: kibana
+    # ports:
+    #   - 5601:5601
+    networks:
+      - app-network
+      - traefik-public
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.services.kibana.loadbalancer.server.port=5601
+        - traefik.http.routers.kibana.rule=Host(`kibana.roady.patos.dev`)
+        - traefik.http.routers.kibana.entrypoints=websecure
+        - traefik.http.routers.kibana.tls=true
+        - traefik.http.routers.kibana.tls.certresolver=leresolver
+
+networks:
+  app-network:
+    external: true
+  traefik-public:
+    driver: overlay
+    external: true
+
+volumes:
+  elasticsearch-data:
