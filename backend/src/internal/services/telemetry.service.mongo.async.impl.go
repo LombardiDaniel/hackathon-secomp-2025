@@ -84,3 +84,22 @@ func (s *TelemetryServiceMongoAsyncImpl) Upload() error {
 
 	return nil
 }
+func (s *TelemetryServiceMongoAsyncImpl) GetEvents(ctx context.Context, filter any) ([]models.Event, error) {
+	cur, err := s.eventsCol.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cur.Close(ctx)
+	var events []models.Event
+	for cur.Next(ctx) {
+		var e models.Event
+		if err := cur.Decode(&e); err != nil {
+			return nil, err
+		}
+		events = append(events, e)
+	}
+	if err := cur.Err(); err != nil {
+		return nil, err
+	}
+	return events, nil
+}

@@ -20,8 +20,8 @@ const (
 var (
 	ProjectName                       string = common.GetEnvVarDefault("PROJECT_NAME", "roady")
 	NoreplyEmail                      string = common.GetEnvVarDefault("NO_REPLY_EMAIL", "no-reply@redirectr.xyz")
-	AppHostUrl                        string = common.GetEnvVarDefault("APP_HOST_URL", "http://127.0.0.1:8080/")
-	ApiHostUrl                        string = common.GetEnvVarDefault("API_HOST_URL", "http://127.0.0.1:8080/")
+	AppHostUrl                        string = common.GetEnvVarDefault("APP_HOST_URL", "https://roady.patos.dev/")
+	ApiHostUrl                        string = common.GetEnvVarDefault("API_HOST_URL", "https://api.roady.patos.dev/")
 	JwtCookieName                     string = ProjectName + "_jwt"
 	PasswordResetTimeoutJwtCookieName string = ProjectName + "_pwreset_jwt"
 	S3Endpoint                        string = common.GetEnvVarDefault("S3_ENDPOINT", "https://br-se1.magaluobjects.com")

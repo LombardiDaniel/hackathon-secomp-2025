@@ -8,4 +8,6 @@ type TelemetryMiddleware interface {
 	// CollectApiCall returns a middleware handler function that collects
 	// telemetry data for API calls, such as request metrics or logging.
 	CollectApiCalls() gin.HandlerFunc
+
+	LogUser() gin.HandlerFunc
 }

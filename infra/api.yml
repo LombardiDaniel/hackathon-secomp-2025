@@ -1,9 +1,22 @@
 services:
+  gen:
+    image: local/gen
+    environment:
+      OPENAI_API_KEY: oie
+    # ports:
+    #   - 5000:5000
+    networks:
+      - app-network
+    deploy:
+      replicas: 10
+
   api:
     image: local/backend
     environment:
       RESEND_API_KEY: re_1234
       NOREPLY_EMAIL: no-reply@redirectr.xyz
+      MONGO_URI: mongodb://usr:pass@mongo:27017/
+      GIN_MODE: release
     # ports:
     #   - 8080:8080
     networks:
