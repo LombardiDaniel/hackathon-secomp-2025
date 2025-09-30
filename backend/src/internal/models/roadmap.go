@@ -1,6 +1,7 @@
 package models
 
 type Roadmap struct {
+	Upvotes               int       `json:"upvotes"`
 	SchemaVersion         int       `json:"schemaVersion"`
 	ID                    string    `json:"id"`
 	Title                 string    `json:"title"`

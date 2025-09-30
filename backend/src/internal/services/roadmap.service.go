@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type RoadmapService interface {
@@ -28,7 +29,8 @@ func NewRoadmapServiceImpl(mongoClient *mongo.Client, roadmapsCol *mongo.Collect
 }
 
 func (s *RoadmapServiceImpl) Roadmaps(ctx context.Context) ([]models.Roadmap, error) {
-	cur, err := s.roadmapsCol.Find(ctx, bson.M{})
+	opts := options.Find().SetSort(bson.M{"upvotes": -1})
+	cur, err := s.roadmapsCol.Find(ctx, bson.M{}, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +61,8 @@ func (s *RoadmapServiceImpl) Roadmap(ctx context.Context, roadmapId string) (mod
 }
 
 func (s *RoadmapServiceImpl) RoadmapsFromUser(ctx context.Context, email string) ([]models.Roadmap, error) {
-	cur, err := s.roadmapsCol.Find(ctx, bson.M{"userEmail": email})
+	opts := options.Find().SetSort(bson.M{"upvotes": -1})
+	cur, err := s.roadmapsCol.Find(ctx, bson.M{"userEmail": email}, opts)
 	if err != nil {
 		return nil, err
 	}
