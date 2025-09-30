@@ -1,11 +1,20 @@
 @import "tailwindcss";
 
+:root {
+  --color-mist: #D8DBE2;
+  --color-sky: #A9BCD0;
+  --color-ocean: #58A4B0;
+  --color-slate: #373F51;
+  --color-amber: #D68C45;
+}
+
 html, body, #root {
   margin: 0;
   padding: 0;
   height: 100%;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background: #f1f5f9;
+  background: var(--color-mist);
+  color: var(--color-slate);
 }
 .module-node, .task-node {
   font-family: inherit;
