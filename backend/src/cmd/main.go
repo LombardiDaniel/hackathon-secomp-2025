@@ -73,7 +73,7 @@ func init() {
 	}
 	metricsCol := mongoClient.Database("telemetry").Collection("metrics")
 	eventsCol := mongoClient.Database("telemetry").Collection("events")
-	roadmapsCol := mongoClient.Database("roadmaps").Collection("events")
+	roadmapsCol := mongoClient.Database("roadmaps").Collection("roadmaps")
 	it.Must(metricsCol.Indexes().CreateOne(ctx, tsIdxModel))
 	it.Must(eventsCol.Indexes().CreateOne(ctx, tsIdxModel))
 
