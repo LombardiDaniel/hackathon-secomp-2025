@@ -1,4 +1,15 @@
 services:
+  gen:
+    image: local/gen
+    environment:
+      OPENAI_API_KEY: oie
+    # ports:
+    #   - 5000:5000
+    networks:
+      - app-network
+    deploy:
+      replicas: 10
+
   api:
     image: local/backend
     environment:
