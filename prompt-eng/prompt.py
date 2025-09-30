@@ -29,7 +29,7 @@ JSON_SCHEMA = {
       "type": "array",
       "items": { "type": "string", "minLength": 2, "maxLength": 40 },
       "maxItems": 30,
-      "uniqueItems": true
+      "uniqueItems": True
     },
     "modules": {
       "type": "array",
@@ -45,7 +45,7 @@ JSON_SCHEMA = {
           "nodeIds": {
             "type": "array",
             "items": { "type": "string", "pattern": "^[a-zA-Z0-9_-]+$" },
-            "uniqueItems": true
+            "uniqueItems": True
           }
         }
       }
@@ -80,13 +80,13 @@ JSON_SCHEMA = {
           "prereqNodeIds": {
             "type": "array",
             "items": { "type": "string" },
-            "uniqueItems": true
+            "uniqueItems": True
           }
         }
       }
     }
   },
-  "additionalProperties": false
+  "additionalProperties": False
 }
 
 # --- 3. FUNÇÃO PARA CRIAR A MENSAGEM DO SISTEMA ---
@@ -132,10 +132,3 @@ def gerar_plano_estudos(prompt_usuario: str):
         print("Erro de validação do JSON:", e)
     except json.JSONDecodeError as e:
         print("Erro ao decodificar JSON:", e)
-
-# --- 5. USO ---
-if __name__ == "__main__":
-    prompt = "Quero estudar sobre desenvolvimento de cloud, como criar cloud do zero"
-    resultado = gerar_plano_estudos(prompt)
-    if resultado:
-        print(json.dumps(resultado, indent=2, ensure_ascii=False))
