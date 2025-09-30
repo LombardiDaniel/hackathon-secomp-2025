@@ -9,6 +9,14 @@ import { readUsernameCookie } from "../../libs/auth";
 import { popularRoadmapsThisWeek } from "../../data/roadmaps";
 
 export default function RoadmapPage() {
+  return (
+    <React.Suspense fallback={<div className="min-h-screen flex items-center justify-center text-sm text-[var(--color-slate)]/70">Loading roadmap…</div>}>
+      <RoadmapPageContent />
+    </React.Suspense>
+  );
+}
+
+function RoadmapPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [username, setUsername] = React.useState<string | null>(null);

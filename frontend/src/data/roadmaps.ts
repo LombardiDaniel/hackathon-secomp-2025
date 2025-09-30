@@ -72,3 +72,23 @@ export const recentRoadmaps: RoadmapSummary[] = [
   },
   popularRoadmapsThisWeek[2]
 ];
+
+const uniqueRoadmapsMap = new Map<string, RoadmapSummary>();
+[...popularRoadmapsThisWeek, ...favoriteRoadmaps, ...recentRoadmaps].forEach(roadmap => {
+  uniqueRoadmapsMap.set(roadmap.id, roadmap);
+});
+
+export const allRoadmapSummaries: RoadmapSummary[] = Array.from(uniqueRoadmapsMap.values());
+
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+export const mockSearchRoadmaps = async (query: string): Promise<RoadmapSummary[]> => {
+  await delay(250);
+  const term = query.trim().toLowerCase();
+  if (!term) return allRoadmapSummaries;
+
+  return allRoadmapSummaries.filter(roadmap => {
+    const haystack = [roadmap.title, roadmap.description, ...roadmap.tags].join(" ").toLowerCase();
+    return haystack.includes(term);
+  });
+};
