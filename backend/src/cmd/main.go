@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/LombardiDaniel/hackathon-secomp-2025/backend/src/docs"
 	"github.com/LombardiDaniel/hackathon-secomp-2025/backend/src/internal/handlers"
 	"github.com/LombardiDaniel/hackathon-secomp-2025/backend/src/internal/middlewares"
 	"github.com/LombardiDaniel/hackathon-secomp-2025/backend/src/internal/services"
@@ -32,7 +33,6 @@ import (
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/swaggo/swag/example/basic/docs"
 )
 
 var (
