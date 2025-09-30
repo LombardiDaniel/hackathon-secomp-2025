@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import type { Roadmap } from "../../types/roadmap";
 import type { Node, Edge } from "@xyflow/react";
 import { MarkerType } from "@xyflow/react";
+import { getModuleColor } from "./colors";
 
 interface TreeOptions {
   includeRoot?: boolean;
@@ -66,6 +67,7 @@ export function useTreeRoadmapGraph(
 
     sortedModules.forEach((mod, modIdx) => {
       const columnX = (options.includeRoot ? 1 : 0) * options.horizontalGap + modIdx * options.horizontalGap;
+      const moduleColor = getModuleColor(modIdx);
 
       const moduleNodeId = `module:${mod.id}`;
       if (options.includeModuleGrouping) {
@@ -79,11 +81,13 @@ export function useTreeRoadmapGraph(
           data: {
             title: mod.title,
             summary: mod.summary,
-            order: mod.order
+            order: mod.order,
+            moduleColor
           },
           style: {
             width: options.moduleWidth,
-            height: options.moduleHeaderHeight
+            height: options.moduleHeaderHeight,
+            background: moduleColor
           },
           draggable: false,
           parentId: options.includeRoot ? "root" : undefined,
@@ -116,13 +120,15 @@ export function useTreeRoadmapGraph(
             objective: task.objective,
             difficulty: task.difficulty,
             estimatedMinutes: task.estimatedMinutes,
-            status
+            status,
+            moduleColor
           },
           parentId: options.includeModuleGrouping ? moduleNodeId : (options.includeRoot ? "root" : undefined),
           extent: options.includeModuleGrouping || options.includeRoot ? "parent" : undefined,
           style: {
             width: options.taskWidth,
-            height: options.taskHeight
+            height: options.taskHeight,
+            background: moduleColor
           }
         });
 

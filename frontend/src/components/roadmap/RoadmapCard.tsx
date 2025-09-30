@@ -37,8 +37,9 @@ export const RoadmapCard: React.FC<RoadmapCardProps> = ({ summary, onOpen, actio
           <h3 className="text-base font-semibold text-[var(--color-slate)]">{summary.title}</h3>
           <p className="mt-1 text-sm text-[var(--color-slate)]/70 line-clamp-2">{summary.description}</p>
         </div>
-        <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-ocean)]/15 text-[var(--color-ocean)] text-xs font-semibold px-2.5 py-1">
-          ▲ {formatNumber(summary.upvotes)}
+        <span className="inline-flex items-center justify-center gap-1 rounded-full bg-[var(--color-ocean)]/15 text-[var(--color-ocean)] text-xs font-semibold px-2.5 py-1">
+          <span aria-hidden className="leading-none">▲</span>
+          <span className="leading-none">{formatNumber(summary.upvotes)}</span>
         </span>
       </div>
       <div className="flex flex-wrap items-center gap-2 text-[11px] text-[var(--color-slate)]/60">

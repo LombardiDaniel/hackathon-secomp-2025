@@ -7,6 +7,7 @@ interface TaskNodeData {
   difficulty: string;
   estimatedMinutes: number;
   status: "not_started" | "in_progress" | "completed";
+  moduleColor?: string;
 }
 
 const difficultyColor: Record<string,string> = {
@@ -15,29 +16,42 @@ const difficultyColor: Record<string,string> = {
   advanced: "bg-rose-100 text-rose-700"
 };
 
-const difficultyShadow: Record<string,string> = {
-  beginner: "shadow-lg",
-  intermediate: "shadow-lg", 
-  advanced: "shadow-lg"
-};
-
-const difficultyShadowStyle: Record<string, React.CSSProperties> = {
-  beginner: { boxShadow: "0 10px 15px -3px rgba(16, 185, 129, 0.3), 0 4px 6px -2px rgba(16, 185, 129, 0.1)" },
-  intermediate: { boxShadow: "0 10px 15px -3px rgba(245, 158, 11, 0.3), 0 4px 6px -2px rgba(245, 158, 11, 0.1)" },
-  advanced: { boxShadow: "0 10px 15px -3px rgba(239, 68, 68, 0.3), 0 4px 6px -2px rgba(239, 68, 68, 0.1)" }
-};
-
 const statusRing: Record<string,string> = {
   not_started: "ring-gray-300",
   in_progress: "ring-sky-400",
   completed: "ring-emerald-500"
 };
 
+const hexToRgb = (hex: string): { r: number; g: number; b: number } | null => {
+  const normalized = hex.replace("#", "");
+  const bigint = Number.parseInt(normalized.length === 3 ? normalized.split("").map(ch => ch + ch).join("") : normalized, 16);
+  if (Number.isNaN(bigint)) {
+    return null;
+  }
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return { r, g, b };
+};
+
+const createModuleShadow = (hexColor?: string): string | undefined => {
+  if (!hexColor) return undefined;
+  const rgb = hexToRgb(hexColor);
+  if (!rgb) return undefined;
+  const { r, g, b } = rgb;
+  return `0 10px 15px -3px rgba(${r}, ${g}, ${b}, 0.35), 0 4px 6px -2px rgba(${r}, ${g}, ${b}, 0.2)`;
+};
+
+const defaultShadow = "0 10px 15px -3px rgba(15, 23, 42, 0.15), 0 4px 6px -2px rgba(15, 23, 42, 0.1)";
+
 export const TaskNode: React.FC<{ data: TaskNodeData }> = ({ data }) => {
+  const moduleShadow = createModuleShadow(data.moduleColor) ?? defaultShadow;
+  const moduleBackground = data.moduleColor ?? "#ffffff";
+
   return (
     <div
-      className={`task-node border rounded-md px-3 py-2 ring-2 ${statusRing[data.status]} ${difficultyShadow[data.difficulty]} transition-colors cursor-pointer`}
-      style={difficultyShadowStyle[data.difficulty]}
+      className={`task-node border rounded-md px-3 py-2 ring-2 ${statusRing[data.status]} transition-colors cursor-pointer`}
+      style={{ boxShadow: moduleShadow, background: moduleBackground }}
     >
       <div className="flex justify-between items-start gap-2">
         <h4 className="font-medium text-sm leading-tight line-clamp-2">{data.title}</h4>

@@ -127,7 +127,7 @@ export default function HomePage() {
             onClick={handleCreate}
             className="inline-flex items-center gap-2 rounded-xl bg-[var(--color-ocean)] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[var(--color-ocean)]/30 hover:bg-[var(--color-slate)] transition"
           >
-            ➕ Create roadmap
+            ✨ Create roadmap
           </button>
         </div>
       </header>

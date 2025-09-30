@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import dagre from "@dagrejs/dagre";
 import type { Roadmap } from "../../types/roadmap";
 import { MarkerType, type Edge, type Node } from "@xyflow/react";
+import { getModuleColor } from "./colors";
 
 interface DepOptions {
   orientation?: "LR" | "TB";
@@ -23,12 +24,10 @@ export function useDependencyGraph(
     const nodes: Node[] = [];
     const edges: Edge[] = [];
 
-    const moduleColors = ["#fef3c7","#e0f2fe","#ede9fe","#dcfce7","#fee2e2","#f1f5f9"];
-
     roadmap.nodes.forEach(task => {
       const status = progress[task.id] || "not_started";
-      const moduleIndex = roadmap.modules.find(m => m.id === task.moduleId)?.order ?? 0;
-      const modColor = moduleColors[moduleIndex % moduleColors.length];
+      const moduleIndex = roadmap.modules.findIndex(m => m.id === task.moduleId);
+      const modColor = getModuleColor(moduleIndex >= 0 ? moduleIndex : 0);
 
       const n: Node = {
         id: task.id,
@@ -39,7 +38,8 @@ export function useDependencyGraph(
           objective: task.objective,
           difficulty: task.difficulty,
           estimatedMinutes: task.estimatedMinutes,
-          status
+          status,
+          moduleColor: modColor
         },
         style: {
           width: 'auto',

@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import dagre from "@dagrejs/dagre";
 import type { Roadmap } from "../../types/roadmap";
 import { MarkerType, type Edge, type Node } from "@xyflow/react";
+import { getModuleColor } from "./colors";
 
 export interface GraphOptions {
   orientation?: "LR" | "TB";
@@ -41,8 +42,12 @@ export function useRoadmapGraph(
     }
 
     // Optional: module grouping as "group" parent nodes (React Flow supports parentId / extent)
+    const moduleColorMap = new Map<string, string>();
+
     if (options.includeModuleGrouping) {
-      roadmap.modules.forEach(m => {
+      roadmap.modules.forEach((m, index) => {
+        const moduleColor = getModuleColor(index);
+        moduleColorMap.set(m.id, moduleColor);
         const modNode: Node = {
           id: `module:${m.id}`,
           type: "moduleNode",
@@ -50,11 +55,13 @@ export function useRoadmapGraph(
           data: {
             title: m.title,
             summary: m.summary,
-            order: m.order
+            order: m.order,
+            moduleColor
           },
           style: {
             width: MODULE_NODE_WIDTH,
-            height: MODULE_NODE_HEIGHT
+            height: MODULE_NODE_HEIGHT,
+            background: moduleColor
           },
           draggable: false,
           selectable: true
@@ -64,11 +71,19 @@ export function useRoadmapGraph(
       });
     }
 
+    if (!options.includeModuleGrouping) {
+      roadmap.modules.forEach((m, index) => {
+        moduleColorMap.set(m.id, getModuleColor(index));
+      });
+    }
+
     // Task nodes
     roadmap.nodes.forEach(task => {
       if (options.focusModuleId && !focusSet.has(task.id)) return;
 
       const status = progress[task.id] || "not_started";
+      const moduleColor = moduleColorMap.get(task.moduleId) ?? getModuleColor(0);
+
       const node: Node = {
         id: task.id,
         type: "taskNode",
@@ -78,13 +93,15 @@ export function useRoadmapGraph(
           objective: task.objective,
           difficulty: task.difficulty,
           estimatedMinutes: task.estimatedMinutes,
-          status
+          status,
+          moduleColor
         },
         parentId: options.includeModuleGrouping ? `module:${task.moduleId}` : undefined,
         extent: options.includeModuleGrouping ? "parent" : undefined,
         style: {
           width: TASK_NODE_WIDTH,
-          height: TASK_NODE_HEIGHT
+          height: TASK_NODE_HEIGHT,
+          background: moduleColor
         }
       };
       g.setNode(node.id, { width: TASK_NODE_WIDTH, height: TASK_NODE_HEIGHT });
