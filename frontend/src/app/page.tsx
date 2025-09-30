@@ -13,7 +13,7 @@ export default function LoginPage() {
   React.useEffect(() => {
     const existing = readUsernameCookie();
     if (existing) {
-      router.replace("/roadmap");
+      router.replace("/home");
     }
   }, [router]);
 
@@ -35,8 +35,8 @@ export default function LoginPage() {
         return;
       }
 
-      writeUsernameCookie(trimmed);
-      router.push("/roadmap");
+  writeUsernameCookie(trimmed);
+  router.push("/home");
     } catch (err) {
       console.error(err);
       setError("Unexpected error. Please try again.");
