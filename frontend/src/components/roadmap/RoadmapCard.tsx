@@ -25,6 +25,7 @@ export const RoadmapCard: React.FC<RoadmapCardProps> = ({ summary, onOpen, actio
       onActionClick(summary.id);
     }
   };
+  const updatedLabel = summary.lastUpdated ? formatRelativeDate(summary.lastUpdated) : "recently";
 
   return (
     <button
@@ -45,7 +46,7 @@ export const RoadmapCard: React.FC<RoadmapCardProps> = ({ summary, onOpen, actio
           ⏱️ {summary.estimatedWeeks} weeks
         </span>
         <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-sky)]/30 px-2 py-0.5">
-          🔄 Updated {formatRelativeDate(summary.lastUpdated)}
+          🔄 Updated {updatedLabel}
         </span>
         {summary.tags.map(tag => (
           <span

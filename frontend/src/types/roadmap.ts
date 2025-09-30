@@ -31,18 +31,31 @@ export const ModuleSchema = z.object({
 
 export type RoadmapModule = z.infer<typeof ModuleSchema>;
 
+const NodesArraySchema = z.array(NodeSchema);
+
 export const RoadmapSchema = z.object({
   schemaVersion: z.literal(1),
   id: z.string().regex(/^[\w-]+$/),
+  upvotes: z.number().int().nonnegative().default(0),
+  userEmail: z.string().email().optional(),
   title: z.string().min(3).max(160),
   description: z.string().min(10).max(5000),
   difficulty: z.enum(["beginner","intermediate","advanced","mixed"]),
   estimatedTotalMinutes: z.number().int().positive(),
   tags: z.array(z.string()).max(30).optional(),
   modules: z.array(ModuleSchema).nonempty(),
-  nodes: z.array(NodeSchema).nonempty()
+  nodes: z.preprocess((value) => {
+    if (value === null || value === undefined) {
+      return [];
+    }
+    return value;
+  }, NodesArraySchema)
 })
 .superRefine((val, ctx) => {
+  if (val.nodes.length === 0) {
+    return;
+  }
+
   const nodeIdSet = new Set(val.nodes.map(n => n.id));
   // Validate module nodeIds exist
   for (const m of val.modules) {

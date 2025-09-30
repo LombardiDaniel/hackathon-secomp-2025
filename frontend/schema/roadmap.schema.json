@@ -7,6 +7,8 @@
   "properties": {
     "schemaVersion": { "type": "integer", "const": 1 },
     "id": { "type": "string", "pattern": "^[a-zA-Z0-9_-]+$" },
+    "upvotes": { "type": "integer", "minimum": 0 },
+    "userEmail": { "type": "string", "format": "email" },
     "title": { "type": "string", "minLength": 3, "maxLength": 160 },
     "description": { "type": "string", "minLength": 10, "maxLength": 5000 },
     "difficulty": { "type": "string", "enum": ["beginner","intermediate","advanced","mixed"] },
@@ -26,7 +28,7 @@
         "properties": {
           "id": { "type": "string", "pattern": "^[a-zA-Z0-9_-]+$" },
           "title": { "type": "string", "minLength": 3, "maxLength": 160 },
-            "summary": { "type": "string" },
+          "summary": { "type": "string" },
           "order": { "type": "integer", "minimum": 0 },
           "nodeIds": {
             "type": "array",
@@ -37,8 +39,7 @@
       }
     },
     "nodes": {
-      "type": "array",
-      "minItems": 1,
+      "type": ["array", "null"],
       "items": {
         "type": "object",
         "required": ["id","title","moduleId","estimatedMinutes","difficulty"],

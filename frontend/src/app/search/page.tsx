@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { mockSearchRoadmaps, type RoadmapSummary } from "../../data/roadmaps";
+import { searchRoadmapSummaries, type RoadmapSummary } from "../../data/roadmaps";
 import { readUsernameCookie } from "../../libs/auth";
 import { RoadmapCard } from "../../components/roadmap/RoadmapCard";
 
@@ -19,7 +19,7 @@ export default function SearchPage() {
     setLoading(true);
     setError(null);
     try {
-      const response = await mockSearchRoadmaps(term);
+  const response = await searchRoadmapSummaries(term);
       setResults(response);
     } catch (err) {
       console.error(err);
