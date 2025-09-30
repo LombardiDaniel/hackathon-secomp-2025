@@ -19,7 +19,7 @@
       "title": "Set Up Environment",
       "objective": "Install Node.js, package manager, editor tooling.",
       "estimatedMinutes": 120,
-      "difficulty": "beginner",
+      "difficulty": "advanced",
       "prereqNodeIds": []
     },
     {
