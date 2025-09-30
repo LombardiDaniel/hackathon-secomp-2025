@@ -4,6 +4,7 @@ services:
     environment:
       RESEND_API_KEY: re_1234
       NOREPLY_EMAIL: no-reply@redirectr.xyz
+      MONGO_URI: mongodb://usr:pass@mongo:27017/
     # ports:
     #   - 8080:8080
     networks:
