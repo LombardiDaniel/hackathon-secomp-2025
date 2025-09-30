@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/LombardiDaniel/hackathon-secomp-2025/backend/src/internal/dto"
+	"github.com/LombardiDaniel/hackathon-secomp-2025/backend/src/internal/middlewares"
 	"github.com/LombardiDaniel/hackathon-secomp-2025/backend/src/internal/services"
 	"github.com/gin-gonic/gin"
 )
@@ -43,6 +44,7 @@ func (h *RoadmapHandler) Roadmaps(ctx *gin.Context) {
 			EstimatedTotalMinutes: roadmap.EstimatedTotalMinutes,
 			Tags:                  roadmap.Tags,
 			Modules:               roadmap.Modules,
+			Nodes:                 roadmap.Nodes,
 		})
 	}
 	ctx.JSON(http.StatusOK, rets)
@@ -74,6 +76,7 @@ func (h *RoadmapHandler) Roadmap(ctx *gin.Context) {
 		EstimatedTotalMinutes: roadmap.EstimatedTotalMinutes,
 		Tags:                  roadmap.Tags,
 		Modules:               roadmap.Modules,
+		Nodes:                 roadmap.Nodes,
 	}
 	ctx.JSON(http.StatusOK, ret)
 }
@@ -105,15 +108,16 @@ func (h *RoadmapHandler) RoadmapsFromUser(ctx *gin.Context) {
 			EstimatedTotalMinutes: roadmap.EstimatedTotalMinutes,
 			Tags:                  roadmap.Tags,
 			Modules:               roadmap.Modules,
+			Nodes:                 roadmap.Nodes,
 		})
 	}
 	ctx.JSON(http.StatusOK, rets)
 }
 
 // RegisterRoutes registers roadmap endpoints
-func (h *RoadmapHandler) RegisterRoutes(rg *gin.RouterGroup) {
+func (h *RoadmapHandler) RegisterRoutes(rg *gin.RouterGroup, telemetryMiddleware middlewares.TelemetryMiddleware) {
 	g := rg.Group("/roadmaps")
-	g.GET("", h.Roadmaps)
-	g.GET("/:roadmapId", h.Roadmap)
-	g.GET("/user", h.RoadmapsFromUser)
+	g.GET("", telemetryMiddleware.LogUser(), h.Roadmaps)
+	g.GET("/:roadmapId", telemetryMiddleware.LogUser(), h.Roadmap)
+	g.GET("/user", telemetryMiddleware.LogUser(), h.RoadmapsFromUser)
 }

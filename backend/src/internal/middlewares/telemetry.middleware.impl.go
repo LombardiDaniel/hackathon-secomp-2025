@@ -36,3 +36,23 @@ func (m *TelemetryMiddlewareImpl) CollectApiCalls() gin.HandlerFunc {
 		)
 	}
 }
+
+func (m *TelemetryMiddlewareImpl) LogUser() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		email, ok := c.Params.Get("email")
+		if !ok {
+			c.Next()
+			return
+		}
+
+		m.telemetryService.RecordEvent(
+			c.Request.Context(),
+			"user_log",
+			map[string]any{
+				"logged": true,
+				"email":  email,
+			},
+			map[string]string{},
+		)
+	}
+}

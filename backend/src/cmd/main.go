@@ -39,8 +39,7 @@ var (
 	ctx    context.Context
 	router *gin.Engine
 
-	// authService      services.AuthService
-	// userService      services.UserService
+	userService      services.UserService
 	roadmapService   services.RoadmapService
 	emailService     services.EmailService
 	objectService    services.ObjectService
@@ -48,8 +47,6 @@ var (
 
 	telemetryMiddleware middlewares.TelemetryMiddleware
 
-	// authHandler handlers.AuthHandler
-	// userHandler handlers.UserHandler
 	roadmapHandler handlers.RoadmapHandler
 
 	taskRunner daemons.TaskRunner
@@ -71,11 +68,21 @@ func init() {
 		Keys:    bson.M{"ts": 1},
 		Options: options.Index(),
 	}
+
 	metricsCol := mongoClient.Database("telemetry").Collection("metrics")
 	eventsCol := mongoClient.Database("telemetry").Collection("events")
 	roadmapsCol := mongoClient.Database("roadmaps").Collection("roadmaps")
+	usersCol := mongoClient.Database("roadmaps").Collection("users")
+
 	it.Must(metricsCol.Indexes().CreateOne(ctx, tsIdxModel))
 	it.Must(eventsCol.Indexes().CreateOne(ctx, tsIdxModel))
+	it.Must(usersCol.Indexes().CreateOne(
+		ctx,
+		mongo.IndexModel{
+			Keys:    bson.D{{Key: "email", Value: 1}},
+			Options: options.Index().SetUnique(true),
+		},
+	))
 
 	s3Host := it.Must(common.ExtractHostFromUrl(constants.S3Endpoint))
 	s3Secure := it.Must(common.UrlIsSecure(constants.S3Endpoint))
@@ -92,8 +99,6 @@ func init() {
 		},
 	))
 
-	// authService = services.NewAuthServiceJwtImpl(os.Getenv("JWT_SECRET_KEY"), db)
-	// userService = services.NewUserServicePgImpl(db)
 	if os.Getenv("RESEND_API_KEY") == "mock" {
 		emailService = &services.EmailServiceMock{}
 	} else {
@@ -101,6 +106,7 @@ func init() {
 	}
 	objectService = services.NewObjectServiceMinioImpl(minioClient)
 	telemetryService = services.NewTelemetryServiceMongoAsyncImpl(mongoClient, metricsCol, eventsCol, 100)
+	services.NewUserServiceImpl(mongoClient, usersCol)
 	roadmapService = services.NewRoadmapServiceImpl(mongoClient, roadmapsCol)
 
 	telemetryMiddleware = middlewares.NewTelemetryMiddleware(telemetryService)
@@ -111,10 +117,11 @@ func init() {
 	router.SetTrustedProxies([]string{"*"})
 
 	corsCfg := cors.DefaultConfig()
-	corsCfg.AllowOrigins = []string{constants.ApiHostUrl, constants.AppHostUrl}
-	corsCfg.AllowCredentials = true
-	corsCfg.AddAllowHeaders("Authorization")
-	corsCfg.MaxAge = 24 * time.Hour
+	// corsCfg.AllowOrigins = []string{constants.ApiHostUrl, constants.AppHostUrl}
+	corsCfg.AllowAllOrigins = true
+	// corsCfg.AllowCredentials = true
+	// corsCfg.AddAllowHeaders("Authorization")
+	// corsCfg.MaxAge = 24 * time.Hour
 
 	slog.Info(fmt.Sprintf("corsCfg: %+v", corsCfg))
 
@@ -143,6 +150,48 @@ func init() {
 	// taskRunner.RegisterTask(24*time.Hour, userService.DeleteExpiredPwResets, 1)
 	// taskRunner.RegisterTask(24*time.Hour, organizationService.DeleteExpiredOrgInvites, 1)
 	taskRunner.RegisterTask(time.Second, telemetryService.Upload, 1)
+	taskRunner.RegisterTask(
+		12*time.Hour,
+		func() error {
+			ctx := context.TODO()
+			users, err := userService.Users(ctx)
+			if err != nil {
+				return err
+			}
+
+			now := time.Now()
+			startOfDay := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
+			endOfDay := startOfDay.Add(24 * time.Hour)
+
+			for _, u := range users {
+				evs, err := telemetryService.GetEvents(ctx,
+					bson.M{
+						"name": "user_log",
+						"metadata": bson.M{
+							"logged": true,
+							"email":  u.Email,
+						},
+						"ts": bson.M{
+							"$gte": startOfDay,
+							"$lt":  endOfDay,
+						},
+					},
+				)
+				if err != nil {
+					continue
+				}
+
+				if len(evs) == 0 {
+					err = emailService.SendReminder(u.Email, "", "")
+					if err != nil {
+						slog.Error(err.Error())
+					}
+				}
+			}
+			return nil
+		},
+		1,
+	)
 }
 
 // @securityDefinitions.apiKey JWT
@@ -163,7 +212,7 @@ func main() {
 	router.Use(telemetryMiddleware.CollectApiCalls())
 
 	basePath := router.Group("/v1")
-	roadmapHandler.RegisterRoutes(basePath)
+	roadmapHandler.RegisterRoutes(basePath, telemetryMiddleware)
 
 	taskRunner.Dispatch()
 
