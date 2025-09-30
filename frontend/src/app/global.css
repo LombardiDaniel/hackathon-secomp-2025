@@ -1,24 +1,26 @@
+@import "tailwindcss";
+
 html, body, #root {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: system-ui, sans-serif;
-  background: #f7f9fb;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: #f1f5f9;
 }
-
 .module-node, .task-node {
-  font-family: system-ui, sans-serif;
+  font-family: inherit;
+  box-sizing: border-box;
 }
-
 .line-clamp-2 {
   display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-
 .line-clamp-3 {
   display: -webkit-box;
+  line-clamp: 3;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;

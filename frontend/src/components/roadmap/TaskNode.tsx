@@ -24,16 +24,18 @@ const statusRing: Record<string,string> = {
 export const TaskNode: React.FC<{ data: TaskNodeData }> = ({ data }) => {
   return (
     <div
-      className={`task-node border rounded-md bg-white px-3 py-2 ring-2 ${statusRing[data.status]} transition-colors`}
+      className={`task-node border rounded-md bg-white px-3 py-2 ring-2 ${statusRing[data.status]} transition-colors cursor-pointer`}
     >
       <div className="flex justify-between items-start gap-2">
-        <h4 className="font-medium text-sm leading-tight">{data.title}</h4>
+        <h4 className="font-medium text-sm leading-tight line-clamp-2">{data.title}</h4>
         <span className={`text-[10px] px-1.5 py-0.5 rounded ${difficultyColor[data.difficulty]}`}>
           {data.difficulty[0].toUpperCase()}
         </span>
       </div>
       {data.objective && (
-        <p className="mt-1 text-[11px] text-gray-600 line-clamp-3">{data.objective}</p>
+        <p className="mt-1 text-[11px] text-gray-600 line-clamp-3">
+          {data.objective}
+        </p>
       )}
       <div className="mt-1 flex items-center justify-between">
         <span className="text-[10px] text-gray-500">
@@ -48,14 +50,15 @@ export const TaskNode: React.FC<{ data: TaskNodeData }> = ({ data }) => {
 };
 
 const StatusBadge: React.FC<{status: TaskNodeData["status"]}> = ({ status }) => {
+  const label = status.replace("_"," ");
   const map: Record<string,string> = {
-    not_started: "gray",
-    in_progress: "sky",
-    completed: "emerald"
+    not_started: "text-gray-500",
+    in_progress: "text-sky-600",
+    completed: "text-emerald-600"
   };
   return (
-    <span className={`text-[10px] capitalize text-${map[status]}-600`}>
-      {status.replace("_"," ")}
+    <span className={`text-[10px] font-medium capitalize ${map[status]}`}>
+      {label}
     </span>
   );
 };
