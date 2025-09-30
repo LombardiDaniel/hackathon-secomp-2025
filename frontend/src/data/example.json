@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "id": "full-stack-ts-12w",
+  "title": "Full-Stack TypeScript (12 Week Path)",
+  "description": "Structured path to build full-stack TypeScript competency including tooling, frontend, backend, and deployment.",
+  "difficulty": "intermediate",
+  "estimatedTotalMinutes": 10800,
+  "tags": ["typescript","web","backend","frontend"],
+  "modules": [
+    { "id": "mod-foundations", "title": "Foundations", "order": 0, "summary": "Environment + Core TS basics", "nodeIds": ["n-env","n-ts-basics","n-tooling"] },
+    { "id": "mod-frontend", "title": "Frontend Core", "order": 1, "summary": "React & SPA patterns", "nodeIds": ["n-react","n-state","n-routing"] },
+    { "id": "mod-backend", "title": "Backend Core", "order": 2, "summary": "API design & persistence", "nodeIds": ["n-api","n-db","n-auth"] },
+    { "id": "mod-deploy", "title": "Deployment & Scaling", "order": 3, "summary": "CI/CD + infra basics", "nodeIds": ["n-ci","n-deploy"] }
+  ],
+  "nodes": [
+    {
+      "id": "n-env",
+      "moduleId": "mod-foundations",
+      "title": "Set Up Environment",
+      "objective": "Install Node.js, package manager, editor tooling.",
+      "estimatedMinutes": 120,
+      "difficulty": "beginner",
+      "prereqNodeIds": []
+    },
+    {
+      "id": "n-ts-basics",
+      "moduleId": "mod-foundations",
+      "title": "TypeScript Basics",
+      "objective": "Learn types, interfaces, generics, narrowing.",
+      "estimatedMinutes": 240,
+      "difficulty": "beginner",
+      "prereqNodeIds": ["n-env"]
+    },
+    {
+      "id": "n-tooling",
+      "moduleId": "mod-foundations",
+      "title": "Tooling & Quality",
+      "objective": "ESLint, Prettier, tsconfig optimization.",
+      "estimatedMinutes": 120,
+      "difficulty": "beginner",
+      "prereqNodeIds": ["n-ts-basics"]
+    },
+    {
+      "id": "n-react",
+      "moduleId": "mod-frontend",
+      "title": "React Fundamentals",
+      "objective": "JSX, function components, hooks.",
+      "estimatedMinutes": 300,
+      "difficulty": "beginner",
+      "prereqNodeIds": ["n-tooling"]
+    },
+    {
+      "id": "n-state",
+      "moduleId": "mod-frontend",
+      "title": "State Management",
+      "objective": "Context vs external libs, query caching.",
+      "estimatedMinutes": 240,
+      "difficulty": "intermediate",
+      "prereqNodeIds": ["n-react"]
+    },
+    {
+      "id": "n-routing",
+      "moduleId": "mod-frontend",
+      "title": "Routing & Navigation",
+      "objective": "Nested routes, code splitting.",
+      "estimatedMinutes": 180,
+      "difficulty": "intermediate",
+      "prereqNodeIds": ["n-react"]
+    },
+    {
+      "id": "n-api",
+      "moduleId": "mod-backend",
+      "title": "API Design",
+      "objective": "REST patterns, validation.",
+      "estimatedMinutes": 300,
+      "difficulty": "intermediate",
+      "prereqNodeIds": ["n-state","n-routing"]
+    },
+    {
+      "id": "n-db",
+      "moduleId": "mod-backend",
+      "title": "Database Layer",
+      "objective": "SQL vs NoSQL, ORMs, migrations.",
+      "estimatedMinutes": 300,
+      "difficulty": "intermediate",
+      "prereqNodeIds": ["n-api"]
+    },
+    {
+      "id": "n-auth",
+      "moduleId": "mod-backend",
+      "title": "Authentication & Authorization",
+      "objective": "Sessions, JWT, RBAC.",
+      "estimatedMinutes": 240,
+      "difficulty": "advanced",
+      "prereqNodeIds": ["n-api"]
+    },
+    {
+      "id": "n-ci",
+      "moduleId": "mod-deploy",
+      "title": "CI Pipeline",
+      "objective": "Automated tests, lint, build.",
+      "estimatedMinutes": 180,
+      "difficulty": "intermediate",
+      "prereqNodeIds": ["n-db","n-auth"]
+    },
+    {
+      "id": "n-deploy",
+      "moduleId": "mod-deploy",
+      "title": "Deployment & Observability",
+      "objective": "Containers, logs, metrics, error tracking.",
+      "estimatedMinutes": 240,
+      "difficulty": "advanced",
+      "prereqNodeIds": ["n-ci"]
+    }
+  ]
+}
