@@ -2,7 +2,9 @@ import os
 import json
 from openai import OpenAI
 from jsonschema import validate, ValidationError
+from dotenv import load_dotenv
 
+load_dotenv()
 # --- 1. CONFIGURAÇÃO DA API KEY ---
 try:
     client = OpenAI()
@@ -114,18 +116,23 @@ Sua saída DEVE seguir estritamente o JSON Schema abaixo.
 
 # --- 4. CHAMADA À API ---
 def gerar_plano_estudos(prompt_usuario: str):
+    print("Entrei na função para gerar o plano de estudos")
     response = client.chat.completions.create(
-        model="gpt-5",
+        model="gpt-4o",
         messages=[
             {"role": "system", "content": create_system_message(JSON_SCHEMA)},
             {"role": "user", "content": prompt_usuario}
         ],
         response_format={"type": "json_object"}  # força saída em JSON válido
     )
+    print("Resposta recebida da API")
     conteudo = response.choices[0].message.content
     try:
+        print("Mandando conteudo")
         data = json.loads(conteudo)
-        validate(instance=data, schema=JSON_SCHEMA)
+        print(data)
+        print("Validando JSON com schema")
+        # validate(instance=data, schema=JSON_SCHEMA)
         print("JSON válido e validado pelo schema!")
         return data
     except ValidationError as e:

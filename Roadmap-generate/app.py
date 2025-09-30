@@ -1,9 +1,14 @@
 # Importa as classes e funções necessárias do Flask
 from flask import Flask, request, jsonify
-from prompt import gerar_plano_estudos
+from generate_roadmap import gerar_plano_estudos
 import pymongo
 from pymongo import MongoClient 
 from datetime import datetime
+import os
+from dotenv import load_dotenv
+
+# Carrega as variáveis de ambiente do arquivo .env
+load_dotenv()
 
 # Cria uma instância da aplicação Flask
 app = Flask(__name__)
@@ -52,6 +57,8 @@ def receber_string():
         return jsonify({"erro": "Ocorreu um erro interno no servidor."}), 500
 
 if __name__ == '__main__':
-    # O debug=True faz com que o servidor reinicie automaticamente após alterações no código.
-    # Não use em produção!
-    app.run(debug=True, port=5000)
+    # Usa variáveis de ambiente para configuração
+    debug_mode = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
+    port = int(os.getenv('PORT', 5000))
+    
+    app.run(debug=debug_mode, port=port)
