@@ -72,7 +72,18 @@ export default function RoadmapPage() {
   return (
     <div className="flex flex-col h-screen w-screen">
       <header className="px-4 py-2 bg-white border-b flex items-center justify-between">
-        <h1 className="font-semibold text-sm">Roadmap Graph MVP</h1>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.push("/home")}
+            className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back
+          </button>
+          <h1 className="font-semibold text-sm">Roadmap: {roadmap.title}</h1>
+        </div>
         <div className="flex items-center gap-3 text-xs text-gray-500">
           {username && <span className="text-[var(--color-slate)]/70">Hi, {username}</span>}
           <span>{roadmap.title}</span>

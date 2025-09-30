@@ -9,7 +9,7 @@ interface ModuleNodeData {
 
 export const ModuleNode: React.FC<{ data: ModuleNodeData }> = ({ data }) => {
   return (
-    <div className="module-node border rounded-md bg-white px-3 py-2 shadow-sm hover:shadow transition cursor-pointer">
+    <div className="module-node border rounded-md px-3 py-2 shadow-sm hover:shadow transition cursor-pointer">
       <div className="text-[10px] uppercase tracking-wide text-gray-500 mb-1">
         Module {data.order >= 0 ? data.order + 1 : "-"}
       </div>

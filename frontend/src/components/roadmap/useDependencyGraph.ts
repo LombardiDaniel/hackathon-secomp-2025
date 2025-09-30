@@ -42,9 +42,10 @@ export function useDependencyGraph(
           status
         },
         style: {
-          width: 240,
-          height: 110,
-          background: modColor
+          width: 'auto',
+          height: 'auto',
+          background: modColor,
+          borderRadius: "8px",
         }
       };
       nodes.push(n);

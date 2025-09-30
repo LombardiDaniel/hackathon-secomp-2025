@@ -15,6 +15,18 @@ const difficultyColor: Record<string,string> = {
   advanced: "bg-rose-100 text-rose-700"
 };
 
+const difficultyShadow: Record<string,string> = {
+  beginner: "shadow-lg",
+  intermediate: "shadow-lg", 
+  advanced: "shadow-lg"
+};
+
+const difficultyShadowStyle: Record<string, React.CSSProperties> = {
+  beginner: { boxShadow: "0 10px 15px -3px rgba(16, 185, 129, 0.3), 0 4px 6px -2px rgba(16, 185, 129, 0.1)" },
+  intermediate: { boxShadow: "0 10px 15px -3px rgba(245, 158, 11, 0.3), 0 4px 6px -2px rgba(245, 158, 11, 0.1)" },
+  advanced: { boxShadow: "0 10px 15px -3px rgba(239, 68, 68, 0.3), 0 4px 6px -2px rgba(239, 68, 68, 0.1)" }
+};
+
 const statusRing: Record<string,string> = {
   not_started: "ring-gray-300",
   in_progress: "ring-sky-400",
@@ -24,7 +36,8 @@ const statusRing: Record<string,string> = {
 export const TaskNode: React.FC<{ data: TaskNodeData }> = ({ data }) => {
   return (
     <div
-      className={`task-node border rounded-md bg-white px-3 py-2 ring-2 ${statusRing[data.status]} transition-colors cursor-pointer`}
+      className={`task-node border rounded-md px-3 py-2 ring-2 ${statusRing[data.status]} ${difficultyShadow[data.difficulty]} transition-colors cursor-pointer`}
+      style={difficultyShadowStyle[data.difficulty]}
     >
       <div className="flex justify-between items-start gap-2">
         <h4 className="font-medium text-sm leading-tight line-clamp-2">{data.title}</h4>

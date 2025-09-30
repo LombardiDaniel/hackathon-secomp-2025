@@ -189,7 +189,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const canComplete = prerequisitesCompleted || prerequisites.length === 0;
 
   return (
-    <aside className="w-80 border-l bg-white p-4 overflow-y-auto animate-in slide-in-from-right">
+    <aside className="w-140 h-full border-l bg-white p-4 overflow-y-auto animate-in slide-in-from-right">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Detalhes da Tarefa</h2>
         {onClose && (

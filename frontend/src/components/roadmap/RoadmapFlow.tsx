@@ -82,11 +82,11 @@ export const RoadmapFlow: React.FC<{ roadmap: Roadmap }> = ({ roadmap }) => {
           nodeTypes={nodeTypes}
           fitView
           onNodeClick={handleNodeClick}
-          panOnScroll
-          zoomOnScroll
+          panOnScroll={false}
+          zoomOnScroll={true}
           proOptions={{ hideAttribution: true }}
         >
-          <Background />
+          {/* <Background /> */}
           <MiniMap pannable zoomable />
           <Controls />
         </ReactFlow>
