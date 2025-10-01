@@ -1,0 +1,91 @@
+import React from "react";
+import { Handle, Position } from "@xyflow/react";
+
+interface TaskNodeData {
+  title: string;
+  objective?: string;
+  difficulty: string;
+  estimatedMinutes: number;
+  status: "not_started" | "in_progress" | "completed";
+  moduleColor?: string;
+}
+
+const difficultyColor: Record<string,string> = {
+  beginner: "bg-emerald-100 text-emerald-700",
+  intermediate: "bg-amber-100 text-amber-700",
+  advanced: "bg-rose-100 text-rose-700"
+};
+
+const statusRing: Record<string,string> = {
+  not_started: "ring-gray-300",
+  in_progress: "ring-sky-400",
+  completed: "ring-emerald-500"
+};
+
+const hexToRgb = (hex: string): { r: number; g: number; b: number } | null => {
+  const normalized = hex.replace("#", "");
+  const bigint = Number.parseInt(normalized.length === 3 ? normalized.split("").map(ch => ch + ch).join("") : normalized, 16);
+  if (Number.isNaN(bigint)) {
+    return null;
+  }
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return { r, g, b };
+};
+
+const createModuleShadow = (hexColor?: string): string | undefined => {
+  if (!hexColor) return undefined;
+  const rgb = hexToRgb(hexColor);
+  if (!rgb) return undefined;
+  const { r, g, b } = rgb;
+  return `0 10px 15px -3px rgba(${r}, ${g}, ${b}, 0.35), 0 4px 6px -2px rgba(${r}, ${g}, ${b}, 0.2)`;
+};
+
+const defaultShadow = "0 10px 15px -3px rgba(15, 23, 42, 0.15), 0 4px 6px -2px rgba(15, 23, 42, 0.1)";
+
+export const TaskNode: React.FC<{ data: TaskNodeData }> = ({ data }) => {
+  const moduleShadow = createModuleShadow(data.moduleColor) ?? defaultShadow;
+  const moduleBackground = data.moduleColor ?? "#ffffff";
+
+  return (
+    <div
+      className={`task-node border rounded-md px-3 py-2 ring-2 ${statusRing[data.status]} transition-colors cursor-pointer`}
+      style={{ boxShadow: moduleShadow, background: moduleBackground }}
+    >
+      <div className="flex justify-between items-start gap-2">
+        <h4 className="font-medium text-sm leading-tight line-clamp-2">{data.title}</h4>
+        <span className={`text-[10px] px-1.5 py-0.5 rounded ${difficultyColor[data.difficulty]}`}>
+          {data.difficulty[0].toUpperCase()}
+        </span>
+      </div>
+      {data.objective && (
+        <p className="mt-1 text-[11px] text-gray-600 line-clamp-3">
+          {data.objective}
+        </p>
+      )}
+      <div className="mt-1 flex items-center justify-between">
+        <span className="text-[10px] text-gray-500">
+          {Math.round(data.estimatedMinutes / 60 * 10)/10}h
+        </span>
+        <StatusBadge status={data.status} />
+      </div>
+      <Handle type="target" position={Position.Left} />
+      <Handle type="source" position={Position.Right} />
+    </div>
+  );
+};
+
+const StatusBadge: React.FC<{status: TaskNodeData["status"]}> = ({ status }) => {
+  const label = status.replace("_"," ");
+  const map: Record<string,string> = {
+    not_started: "text-gray-500",
+    in_progress: "text-sky-600",
+    completed: "text-emerald-600"
+  };
+  return (
+    <span className={`text-[10px] font-medium capitalize ${map[status]}`}>
+      {label}
+    </span>
+  );
+};
