@@ -38,8 +38,8 @@ RUN go mod download
 
 COPY ./ ./
 
-RUN swag init -g cmd/main.go && \
-    go build -o /bin/main cmd/main.go
+RUN swag init -g cmd/main.go
+RUN go build -o /bin/main cmd/main.go
 
 
 #### - SERVER - ####

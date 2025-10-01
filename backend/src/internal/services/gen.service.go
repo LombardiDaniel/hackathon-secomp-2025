@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -42,6 +43,8 @@ func (g *GenServiceImpl) GenerateRoadmap(ctx context.Context, prompt string) (dt
 		return dto.Roadmap{}, err
 	}
 	defer resp.Body.Close()
+
+	slog.Info("Req enviada")
 
 	if resp.StatusCode != http.StatusOK {
 		return dto.Roadmap{}, fmt.Errorf("unexpected status code: %d", resp.StatusCode)

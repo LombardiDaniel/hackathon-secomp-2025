@@ -120,7 +120,7 @@ func init() {
 	telemetryService = services.NewTelemetryServiceMongoAsyncImpl(mongoClient, metricsCol, eventsCol, 100)
 	services.NewUserServiceImpl(mongoClient, usersCol)
 	roadmapService = services.NewRoadmapServiceImpl(mongoClient, roadmapsCol)
-	genService = services.NewGenServiceImpl("https://elastic.roady.patos.dev/")
+	genService = services.NewGenServiceImpl("http://genservice:5000/")
 	searchService = services.NewElasticServiceImpl(es)
 
 	telemetryMiddleware = middlewares.NewTelemetryMiddleware(telemetryService)

@@ -163,7 +163,7 @@ func (h *RoadmapHandler) Insert(ctx *gin.Context) {
 // @Param query path string true "Search query"
 // @Success 200 string RoadmapID
 // @Failure 502 string BadGateway
-// @Router /v1/roadmaps/search [GET]
+// @Router /v1/roadmaps/search/{query} [GET]
 func (h *RoadmapHandler) Search(ctx *gin.Context) {
 	query := ctx.Param("query")
 	s, err := h.searchService.SearchRoadmaps(ctx, query)

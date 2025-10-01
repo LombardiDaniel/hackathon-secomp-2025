@@ -31,9 +31,11 @@ def receber_string():
     Endpoint para receber uma string de um cliente (front-end).
     Espera um JSON no formato: {"prompt": "algum texto aqui"}
     """
-
+    print("AAAA")
     try:
+        print(str(request.data))
         dados = request.get_json()
+        print("dados: " + dados)
         if not dados:
             # Retorna erro se nenhum JSON foi enviado
             return (
