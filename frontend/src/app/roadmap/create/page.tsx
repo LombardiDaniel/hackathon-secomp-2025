@@ -11,7 +11,7 @@ export default function CreateRoadmapPage() {
   const [prompt, setPrompt] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = React.useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     const stored = readUsernameCookie();
@@ -25,7 +25,7 @@ export default function CreateRoadmapPage() {
   const handleSubmit = React.useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
-    setSuccessMessage(null);
+  setStatusMessage(null);
 
     if (!prompt.trim()) {
       setError("Tell us what you want to study so we can generate a roadmap.");
@@ -39,18 +39,21 @@ export default function CreateRoadmapPage() {
     }
 
     setLoading(true);
+    setStatusMessage("We're generating your roadmap. This can take a couple of minutes—hang tight!");
     try {
       const response = await postRoadmapPrompt({ prompt, username });
-      if (!response.success) {
+      if (!response.success || !response.roadmapId) {
         setError("We couldn't create a roadmap right now. Please try again.");
+        setStatusMessage(null);
         return;
       }
 
-      setSuccessMessage("Awesome! We'll craft this roadmap and notify you when it's ready.");
-      setPrompt("");
+      setStatusMessage("Roadmap ready! Redirecting you to the planner…");
+      router.push(`/roadmap?roadmapId=${encodeURIComponent(response.roadmapId)}`);
     } catch (err) {
       console.error(err);
       setError("Unexpected error while creating the roadmap. Please try again shortly.");
+      setStatusMessage(null);
     } finally {
       setLoading(false);
     }
@@ -64,7 +67,7 @@ export default function CreateRoadmapPage() {
           <p className="text-xs uppercase tracking-[0.2em] text-[var(--color-slate)]/60">Create roadmap</p>
           <h1 className="text-2xl font-semibold text-[var(--color-slate)]">What do you want to master next?</h1>
           <p className="text-sm text-[var(--color-slate)]/70">
-            Describe goals, timeline, or skills you're aiming for. We'll send this prompt to the AI planner when the backend is ready.
+            Describe goals, timeline, or skills you're aiming for. Generating a roadmap can take a little while, so keep the tab open after you submit.
           </p>
         </div>
 
@@ -91,9 +94,9 @@ export default function CreateRoadmapPage() {
             </div>
           )}
 
-          {successMessage && (
-            <div className="rounded-xl border border-[var(--color-ocean)]/40 bg-[var(--color-ocean)]/15 px-4 py-3 text-xs text-[var(--color-ocean)]">
-              {successMessage}
+          {statusMessage && (
+            <div className="rounded-xl border border-[var(--color-ocean)]/40 bg-[var(--color-ocean)]/15 px-4 py-3 text-xs text-[var(--color-ocean)]" aria-live="polite">
+              {statusMessage}
             </div>
           )}
 
