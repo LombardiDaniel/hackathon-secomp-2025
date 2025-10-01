@@ -95,62 +95,11 @@ O projeto utiliza um schema JSON rigoroso para garantir a consistência dos road
 }
 ```
 
-## 🚀 Instalação e Execução
-
-### Pré-requisitos
-
-- Docker & Docker Compose
-- Node.js 18+ (para desenvolvimento frontend)
-- Go 1.24+ (para desenvolvimento backend)
-- Python 3.10+ (para serviço de geração)
-
-### 1. Clone o Repositório
-
-```bash
-git clone https://github.com/LombardiDaniel/hackathon-secomp-2025.git
-cd hackathon-secomp-2025
-```
-
-### 2. Backend (Go)
-
-```bash
-cd backend
-cp .env.example .env  # Configure as variáveis de ambiente
-docker compose up --watch
-```
-
-**Serviços disponíveis:**
-- API: http://localhost:8080
-- Swagger UI: http://localhost:8080/docs
-- MinIO UI: http://localhost:9001
-- MongoDB: localhost:27017
-
-### 3. Frontend (Next.js)
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-**Acesso:** http://localhost:3000
-
-### 4. Serviço de Geração (Python)
-
-```bash
-cd Roadmap-generate
-pip install -r requirements.txt
-cp .env.example .env  # Configure OPENAI_API_KEY
-python app.py
-```
-
-**API de Geração:** http://localhost:5000
-
 ## 🎮 Como Usar
 
 ### 1. Criando um Roadmap
 
-1. Acesse a aplicação e faça login com um username
+1. Acesse a aplicação e faça login com um email
 2. Navegue até "Criar Roadmap"
 3. Digite um prompt descrevendo o que você quer aprender
 4. Aguarde a IA gerar o roadmap estruturado
@@ -160,7 +109,6 @@ python app.py
 
 - **Home**: Veja roadmaps em destaque e recentes
 - **Busca**: Encontre roadmaps por palavras-chave
-- **Filtros**: Filtre por dificuldade, tags ou duração
 - **Detalhes**: Clique em qualquer roadmap para ver detalhes completos
 
 ### 3. Exemplos de Prompts
