@@ -4,6 +4,17 @@
 
 **Roady** é uma plataforma inovadora que utiliza Inteligência Artificial para gerar roadmaps personalizados de aprendizado. Desenvolvido durante o Hackathon SECOMP 2025, o projeto permite que usuários criem trilhas de estudo estruturadas e interativas baseadas em suas necessidades específicas.
 
+### ✨ O que você encontra aqui:
+
+**Caminhos de Estudo, do seu jeito**
+Não sabe por onde começar? Descreva o que você quer aprender com um simples prompt e nossa IA montará um roadmap detalhado, dos conceitos básicos aos avançados.
+
+**Sabedoria da Comunidade**
+Navegue por dezenas de roadmaps criados e validados por outros usuários. Encontrou um roteiro de estudos perfeito? Dê um **upvote** e ajude a comunidade a descobrir os melhores caminhos!
+
+**Seu Coach Pessoal de Estudos**
+Acreditamos que a consistência é a chave para o sucesso. Por isso, nos inspiramos no modelo do Duolingo para te ajudar a manter a disciplina. Com nosso sistema de notificações por e-mail, você receberá lembretes para não perder o foco e continuar evoluindo, dia após dia.
+
 ## 🎯 Funcionalidades Principais
 
 - **Geração Inteligente**: Cria roadmaps personalizados usando GPT-4 baseado em prompts do usuário
@@ -12,6 +23,32 @@
 - **Sistema de Votação**: Permite upvotes nos roadmaps mais úteis
 - **Busca e Filtragem**: Encontre roadmaps por tags, dificuldade ou tema
 - **Responsivo**: Interface otimizada para desktop e mobile
+
+## 🎮 Como Usar
+
+### 1. Criando um Roadmap
+
+1. Acesse a aplicação e faça login com um email
+2. Navegue até "Criar Roadmap"
+3. Digite um prompt descrevendo o que você quer aprender
+4. Aguarde a IA gerar o roadmap estruturado
+5. Visualize e navegue pelo roadmap interativo
+
+### 2. Explorando Roadmaps
+
+- **Home**: Veja roadmaps em destaque e recentes
+- **Busca**: Encontre roadmaps por palavras-chave
+- **Detalhes**: Clique em qualquer roadmap para ver detalhes completos
+
+### 3. Exemplos de Prompts
+
+```
+"Quero aprender desenvolvimento web fullstack"
+"Como me tornar um cientista de dados"
+"Roadmap para aprender machine learning do zero"
+"Trilha de estudos para DevOps engineer"
+```
+
 
 ## 🏗️ Arquitetura do Sistema
 
@@ -55,7 +92,7 @@
 
 ## 📋 Schema de Dados
 
-O projeto utiliza um schema JSON rigoroso para garantir a consistência dos roadmaps:
+O projeto utiliza um schema JSON para garantir a consistência dos roadmaps:
 
 ```json
 {
@@ -93,31 +130,6 @@ O projeto utiliza um schema JSON rigoroso para garantir a consistência dos road
     }
   ]
 }
-```
-
-## 🎮 Como Usar
-
-### 1. Criando um Roadmap
-
-1. Acesse a aplicação e faça login com um email
-2. Navegue até "Criar Roadmap"
-3. Digite um prompt descrevendo o que você quer aprender
-4. Aguarde a IA gerar o roadmap estruturado
-5. Visualize e navegue pelo roadmap interativo
-
-### 2. Explorando Roadmaps
-
-- **Home**: Veja roadmaps em destaque e recentes
-- **Busca**: Encontre roadmaps por palavras-chave
-- **Detalhes**: Clique em qualquer roadmap para ver detalhes completos
-
-### 3. Exemplos de Prompts
-
-```
-"Quero aprender desenvolvimento web fullstack"
-"Como me tornar um cientista de dados"
-"Roadmap para aprender machine learning do zero"
-"Trilha de estudos para DevOps engineer"
 ```
 
 ## 🛠️ Tecnologias Utilizadas
@@ -193,40 +205,18 @@ GET  /dados               # Lista roadmaps salvos
 GET  /roadmap/:id         # Busca roadmap por ID
 ```
 
-## 🎯 Roadmap de Desenvolvimento
-
-- [x] **MVP Core**: Geração básica de roadmaps
-- [x] **Interface Visual**: React Flow para visualização
-- [x] **Sistema de Busca**: Filtros e pesquisa
-- [ ] **Autenticação OAuth**: Login social
-- [ ] **Colaboração**: Roadmaps compartilhados
-- [ ] **Progresso do Usuário**: Tracking de conclusão
-- [ ] **Recomendações**: IA para sugestões personalizadas
-- [ ] **Mobile App**: Aplicativo nativo
-
 ## 📄 Licença
 
 Este projeto está licenciado sob a Licença BSD 3-Clause - veja o arquivo [LICENSE](./LICENSE) para detalhes.
 
-## 🤝 Contribuindo
-
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
-3. Commit suas mudanças (`git commit -am 'Adiciona nova feature'`)
-4. Push para a branch (`git push origin feature/nova-feature`)
-5. Abra um Pull Request
-
 ## 👥 Equipe
 
-Desenvolvido durante o **Hackathon SECOMP 2025** por uma equipe apaixonada por educação e tecnologia.
+- Laura Mota
+- Lucas Oliveira
+- Luiz Otávio Teixeira Mello
+- Lucas Cardoso
+- Daniel Lombardi
 
 ## 🙏 Agradecimentos
 
-- **SECOMP 2025** pela oportunidade do hackathon
-- **OpenAI** pela API GPT-4
-- **Comunidade Open Source** pelas ferramentas utilizadas
-
----
-
-**🚀 Transformando a forma como aprendemos, um roadmap por vez!**
-
+- **SECOMP** e **MAGALU CLOUD** pela oportunidade do hackathon. Adoramos o evento
