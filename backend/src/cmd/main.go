@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	elasticsearch "github.com/elastic/go-elasticsearch/v8"
+
 	"github.com/LombardiDaniel/hackathon-secomp-2025/backend/src/docs"
 	"github.com/LombardiDaniel/hackathon-secomp-2025/backend/src/internal/handlers"
 	"github.com/LombardiDaniel/hackathon-secomp-2025/backend/src/internal/middlewares"
@@ -44,6 +46,8 @@ var (
 	emailService     services.EmailService
 	objectService    services.ObjectService
 	telemetryService services.TelemetryService
+	genService       services.GenService
+	searchService    services.ElasticService
 
 	telemetryMiddleware middlewares.TelemetryMiddleware
 
@@ -55,6 +59,14 @@ var (
 func init() {
 	logger.InitSlogger()
 	ctx = context.Background()
+
+	cfg := elasticsearch.Config{
+		Addresses: []string{"https://elastic.roady.patos.dev/"},
+	}
+	es, err := elasticsearch.NewTypedClient(cfg)
+	if err != nil {
+		panic(err)
+	}
 
 	mongoConn := options.Client().ApplyURI(
 		common.GetEnvVarDefault("MONGO_URI", "mongodb://localhost:27017"),
@@ -108,10 +120,12 @@ func init() {
 	telemetryService = services.NewTelemetryServiceMongoAsyncImpl(mongoClient, metricsCol, eventsCol, 100)
 	services.NewUserServiceImpl(mongoClient, usersCol)
 	roadmapService = services.NewRoadmapServiceImpl(mongoClient, roadmapsCol)
+	genService = services.NewGenServiceImpl("https://elastic.roady.patos.dev/")
+	searchService = services.NewElasticServiceImpl(es)
 
 	telemetryMiddleware = middlewares.NewTelemetryMiddleware(telemetryService)
 
-	roadmapHandler = handlers.NewRoadmapHandler(roadmapService)
+	roadmapHandler = handlers.NewRoadmapHandler(roadmapService, genService, searchService)
 
 	router = gin.Default()
 	router.SetTrustedProxies([]string{"*"})
@@ -119,6 +133,7 @@ func init() {
 	corsCfg := cors.DefaultConfig()
 	// corsCfg.AllowOrigins = []string{constants.ApiHostUrl, constants.AppHostUrl}
 	corsCfg.AllowAllOrigins = true
+	corsCfg.AllowCredentials = true
 	// corsCfg.AllowCredentials = true
 	// corsCfg.AddAllowHeaders("Authorization")
 	// corsCfg.MaxAge = 24 * time.Hour
@@ -128,8 +143,8 @@ func init() {
 	router.Use(cors.New(corsCfg))
 	router.Use(limits.RequestSizeLimiter(constants.MaxRequestSize))
 
-	docs.SwaggerInfo.Title = "Goliath"
-	docs.SwaggerInfo.Description = "Goliath"
+	docs.SwaggerInfo.Title = "roady"
+	docs.SwaggerInfo.Description = "roady"
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.BasePath = ""
 	docs.SwaggerInfo.Host = strings.Split(constants.ApiHostUrl, "://")[1]

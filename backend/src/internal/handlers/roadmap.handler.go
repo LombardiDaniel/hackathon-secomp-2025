@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/LombardiDaniel/hackathon-secomp-2025/backend/src/internal/dto"
@@ -11,11 +13,15 @@ import (
 
 type RoadmapHandler struct {
 	roadmapService services.RoadmapService
+	genService     services.GenService
+	searchService  services.ElasticService
 }
 
-func NewRoadmapHandler(roadmapService services.RoadmapService) RoadmapHandler {
+func NewRoadmapHandler(roadmapService services.RoadmapService, genService services.GenService, searchService services.ElasticService) RoadmapHandler {
 	return RoadmapHandler{
 		roadmapService: roadmapService,
+		genService:     genService,
+		searchService:  searchService,
 	}
 }
 
@@ -114,10 +120,66 @@ func (h *RoadmapHandler) RoadmapsFromUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, rets)
 }
 
+// @Summary Insert Roadmap
+// @Tags Roadmap
+// @Produce json
+// @Param email query string true "User Email"
+// @Param prompt query string true "The Prompt"
+// @Success 200 string RoadmapID
+// @Failure 502 string BadGateway
+// @Router /v1/roadmaps [POST]
+func (h *RoadmapHandler) Insert(ctx *gin.Context) {
+	email := ctx.Query("email")
+	prompt := ctx.Query("prompt")
+
+	slog.Info(fmt.Sprintf("insert: %s: %s", email, prompt))
+
+	roadmap, err := h.genService.GenerateRoadmap(ctx, prompt)
+	if err != nil {
+		slog.Error(err.Error())
+		ctx.String(http.StatusBadGateway, "BadGateway")
+		return
+	}
+
+	rd, err := h.roadmapService.Insert(ctx, email, roadmap)
+	if err != nil {
+		slog.Error(err.Error())
+		ctx.String(http.StatusBadGateway, "BadGateway")
+		return
+	}
+
+	err = h.searchService.InsertRoadmap(ctx, rd, prompt)
+	if err != nil {
+		slog.Error(err.Error())
+		ctx.String(http.StatusBadGateway, "BadGateway")
+		return
+	}
+	ctx.String(http.StatusOK, roadmap.ID)
+}
+
+// @Summary Searches Roadmap
+// @Tags Roadmap
+// @Produce json
+// @Param query path string true "Search query"
+// @Success 200 string RoadmapID
+// @Failure 502 string BadGateway
+// @Router /v1/roadmaps/search [GET]
+func (h *RoadmapHandler) Search(ctx *gin.Context) {
+	query := ctx.Param("query")
+	s, err := h.searchService.SearchRoadmaps(ctx, query)
+	if err != nil {
+		ctx.String(http.StatusBadGateway, "BadGateway")
+		return
+	}
+	ctx.String(200, s)
+}
+
 // RegisterRoutes registers roadmap endpoints
 func (h *RoadmapHandler) RegisterRoutes(rg *gin.RouterGroup, telemetryMiddleware middlewares.TelemetryMiddleware) {
 	g := rg.Group("/roadmaps")
 	g.GET("", telemetryMiddleware.LogUser(), h.Roadmaps)
 	g.GET("/:roadmapId", telemetryMiddleware.LogUser(), h.Roadmap)
 	g.GET("/user", telemetryMiddleware.LogUser(), h.RoadmapsFromUser)
+	g.POST("", telemetryMiddleware.LogUser(), h.Insert)
+	g.GET("/search/:query", telemetryMiddleware.LogUser(), h.Search)
 }

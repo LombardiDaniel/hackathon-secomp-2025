@@ -2,7 +2,9 @@ package services
 
 import (
 	"context"
+	"math/rand"
 
+	"github.com/LombardiDaniel/hackathon-secomp-2025/backend/src/internal/dto"
 	"github.com/LombardiDaniel/hackathon-secomp-2025/backend/src/internal/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -14,6 +16,8 @@ type RoadmapService interface {
 	Roadmaps(ctx context.Context) ([]models.Roadmap, error)
 	Roadmap(ctx context.Context, roadmapId string) (models.Roadmap, error)
 	RoadmapsFromUser(ctx context.Context, email string) ([]models.Roadmap, error)
+
+	Insert(ctx context.Context, email string, roadmap dto.Roadmap) (models.Roadmap, error)
 }
 
 type RoadmapServiceImpl struct {
@@ -80,4 +84,22 @@ func (s *RoadmapServiceImpl) RoadmapsFromUser(ctx context.Context, email string)
 		return nil, err
 	}
 	return roadmaps, nil
+}
+
+func (s *RoadmapServiceImpl) Insert(ctx context.Context, email string, roadmap dto.Roadmap) (models.Roadmap, error) {
+	rm := models.Roadmap{
+		ID:                    primitive.NewObjectID(),
+		Upvotes:               rand.Int() % 10_000_000,
+		UserEmail:             email,
+		SchemaVersion:         roadmap.SchemaVersion,
+		Title:                 roadmap.Title,
+		Description:           roadmap.Description,
+		Difficulty:            roadmap.Difficulty,
+		EstimatedTotalMinutes: roadmap.EstimatedTotalMinutes,
+		Tags:                  roadmap.Tags,
+		Modules:               roadmap.Modules,
+		Nodes:                 roadmap.Nodes,
+	}
+	_, err := s.roadmapsCol.InsertOne(ctx, rm)
+	return rm, err
 }

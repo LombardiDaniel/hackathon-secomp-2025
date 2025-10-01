@@ -1,6 +1,6 @@
 services:
-  gen:
-    image: local/gen
+  genservice:
+    image: local/genservice
     environment:
       OPENAI_API_KEY: oie
     # ports:
