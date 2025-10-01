@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+:root {
+  --color-mist: #D8DBE2;
+  --color-sky: #A9BCD0;
+  --color-ocean: #58A4B0;
+  --color-slate: #373F51;
+  --color-amber: #D68C45;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--color-mist);
+  color: var(--color-slate);
+}
+.module-node, .task-node {
+  font-family: inherit;
+  box-sizing: border-box;
+}
+.line-clamp-2 {
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.line-clamp-3 {
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
